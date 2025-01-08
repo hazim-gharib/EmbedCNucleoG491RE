@@ -1,0 +1,3 @@
+[submodule "vendor/stm32g4xx-hal-driver"]
+	path = vendor/stm32g4xx-hal-driver
+	url = git@github.com:STMicroelectronics/stm32g4xx-hal-driver.git

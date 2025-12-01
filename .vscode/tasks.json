@@ -1,0 +1,59 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Configure",
+            "type": "shell",
+            "command": "cmake",
+            "args": [
+                "-S", ".",
+                "-B", "build",
+                "-G", "Ninja",
+                "-DCMAKE_TOOLCHAIN_FILE=arm-none-eabi.cmake"
+            ],
+            "problemMatcher": []
+        },
+        {
+            "label": "Build",
+            "type": "shell",
+            "command": "cmake --build build",
+            "dependsOn": ["Configure"],
+            "group": {
+                "kind": "build",
+            },
+            "problemMatcher": []
+        },
+
+        {
+            "label": "Flash (OpenOCD)",
+            "type": "shell",
+            "command": "openocd",
+            "args": [
+                "-f", "interface/stlink.cfg",
+                "-f", "target/stm32g4x.cfg",
+                "-c", "program build/nucleo_g491re.elf verify reset exit"
+            ],
+            "group": "none",
+            "dependsOn": [
+                "Build"
+            ],
+            "problemMatcher": []
+        },
+
+        {
+            "label": "Flash (st-flash)",
+            "type": "shell",
+            "command": "st-flash",
+            "args": [
+                "write",
+                "build/g491re_baremetal.bin",
+                "0x8000000"
+            ],
+            "group": "none",
+            "dependsOn": [
+                "Build"
+            ],
+            "problemMatcher": []
+        }
+    ]
+}

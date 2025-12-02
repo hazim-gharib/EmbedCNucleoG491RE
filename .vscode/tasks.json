@@ -9,7 +9,8 @@
                 "-S", ".",
                 "-B", "build",
                 "-G", "Ninja",
-                "-DCMAKE_TOOLCHAIN_FILE=arm-none-eabi.cmake"
+                "-DCMAKE_TOOLCHAIN_FILE=arm-none-eabi.cmake",
+                "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON"
             ],
             "problemMatcher": []
         },

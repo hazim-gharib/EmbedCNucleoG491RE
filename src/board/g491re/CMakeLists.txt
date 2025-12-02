@@ -4,7 +4,6 @@ target_include_directories(g491re_baremetal.elf PRIVATE ${CMAKE_CURRENT_SOURCE_D
 # Module sources
 set(BOARD_SOURCES
     gpio.c
-    rcc.c
     board.c
 )
 

@@ -1,6 +1,6 @@
 // Only include app and board public headers; HAL used inside board
-#include "board/g491re/public_inc/board.h"
-#include "app/public_inc/app.h"
+#include "board/g491re/board.h"
+#include "app/app.h"
 
 // -----------------------------------------
 // MAIN

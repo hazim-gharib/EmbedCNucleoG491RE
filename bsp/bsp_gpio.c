@@ -6,7 +6,7 @@ static inline void GPIOB_CLK_ENABLE(void) { __HAL_RCC_GPIOB_CLK_ENABLE(); }
 static inline void GPIOC_CLK_ENABLE(void) { __HAL_RCC_GPIOC_CLK_ENABLE(); }
 
 // Array of GPIO configurations
-const tGpio_Config bsp_gpio_list[BSP_GPIO_MAX] = {
+const t_bsp_gpio_config bsp_gpio_list[BSP_GPIO_MAX] = {
     // Blue LEDs
     [BSP_LED_BLUE1] = {
         .port = GPIOA,

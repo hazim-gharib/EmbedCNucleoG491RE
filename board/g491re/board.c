@@ -1,6 +1,6 @@
 #include "stm32g4xx_hal.h"
-#include "board/g491re/public_inc/board.h"
-#include "board/g491re/public_inc/gpio.h"
+#include "board/g491re/board.h"
+#include "board/g491re/gpio.h"
 
 #define HAL_CHECK(expr) do { if ((expr) != HAL_OK) Error_Handler(__FILE__, __LINE__); } while(0)
 
@@ -8,15 +8,15 @@ static void SystemClock_Config(void);
 
 void board_init(void)
 {
-    HAL_Init();               // Initialize HAL + SysTick
-    SystemClock_Config();     // Configure system clock (HSI + PLL to 170 MHz)
-    mGpio_init();             // Initialize GPIOs
+    HAL_Init();             
+    SystemClock_Config();     
+    gpio_init();             
 }
 
 static void Error_Handler(const char* file, int line)
 {
     (void)file; (void)line;
-    while (1) { /* optional: toggle LED for fault indication */ }
+    while (1) { }
 }
 
 

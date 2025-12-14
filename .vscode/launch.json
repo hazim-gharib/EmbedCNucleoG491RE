@@ -8,7 +8,7 @@
             "servertype": "openocd",
 
             "cwd": "${workspaceFolder}",
-            "executable": "build/g491re_baremetal.elf",    
+            "executable": "build/EmbedCNucleoG491RE.elf",    
             "runToMain": true,
             "stopAtEntry": true,
 

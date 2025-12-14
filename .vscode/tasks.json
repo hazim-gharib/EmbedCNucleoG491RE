@@ -47,7 +47,7 @@
             "command": "st-flash",
             "args": [
                 "write",
-                "build/g491re_baremetal.bin",
+                "build/EmbedCNucleoG491RE.bin",
                 "0x8000000"
             ],
             "group": "none",

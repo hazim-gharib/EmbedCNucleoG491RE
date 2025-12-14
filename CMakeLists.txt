@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.15)
-project(g491re_baremetal C ASM)
+project(EmbedCNucleoG491RE C ASM)
 
 # You must configure with:
 # cmake -B build -S . -G Ninja -DCMAKE_TOOLCHAIN_FILE=arm-none-eabi.cmake
@@ -29,15 +29,15 @@ set(CMAKE_EXE_LINKER_FLAGS "${MCU_FLAGS} ${SECTION_FLAGS} -Wl,--gc-sections")
 # Core system / startup sources
 # ---------------------------------------------------------------------------
 set(SYSTEM_SOURCES
-    src/main.c
-    src/board/g491re/system_stm32g4xx.c
-    src/board/g491re/sysmem.c
-    src/board/g491re/syscalls.c
-    src/board/g491re/startup_stm32g491xx.s
+    main.c
+    board/g491re/system_stm32g4xx.c
+    board/g491re/sysmem.c
+    board/g491re/syscalls.c
+    board/g491re/startup_stm32g491xx.s
 )
 
 set_source_files_properties(
-    src/board/g491re/startup_stm32g491xx.s
+    board/g491re/startup_stm32g491xx.s
     PROPERTIES LANGUAGE ASM
 )
 
@@ -61,9 +61,11 @@ add_executable(${PROJECT_NAME}.elf
 # Include dirs
 # ---------------------------------------------------------------------------
 target_include_directories(${PROJECT_NAME}.elf PRIVATE
-    src
-    src/public_inc
-    src/board/g491re/public_inc
+    ${CMAKE_SOURCE_DIR}
+    ${CMAKE_SOURCE_DIR}/app/public_inc
+    ${CMAKE_SOURCE_DIR}/board/g491re/public_inc
+    ${CMAKE_SOURCE_DIR}/board/g491re
+    ${CMAKE_SOURCE_DIR}/bsp/public_inc
 )
 
 # Treat vendor headers as SYSTEM to demote warnings originating from third-party code
@@ -84,7 +86,7 @@ target_compile_definitions(${PROJECT_NAME}.elf PRIVATE
 # ---------------------------------------------------------------------------
 # Linker Script
 # ---------------------------------------------------------------------------
-set(LINKER_SCRIPT ${CMAKE_SOURCE_DIR}/src/board/g491re/STM32G491RETX_FLASH.ld)
+set(LINKER_SCRIPT ${CMAKE_SOURCE_DIR}/board/g491re/STM32G491RETX_FLASH.ld)
 
 target_link_options(${PROJECT_NAME}.elf PRIVATE
     -T${LINKER_SCRIPT}
@@ -95,9 +97,9 @@ target_link_options(${PROJECT_NAME}.elf PRIVATE
 # ---------------------------------------------------------------------------
 # Add modules
 # ---------------------------------------------------------------------------
-add_subdirectory(src/app)
-add_subdirectory(src/board/g491re)
-add_subdirectory(src/bsp)
+add_subdirectory(app)
+add_subdirectory(board/g491re)
+add_subdirectory(bsp)
 
 # ---------------------------------------------------------------------------
 # Post-build steps

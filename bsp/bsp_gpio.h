@@ -11,26 +11,26 @@ typedef enum
     BSP_LED_BLUE3,     // PA7
 
     // Yellow LEDs
-    BSP_LED_YELLOW1,   // PB6
-    BSP_LED_YELLOW2,   // PC7
-    BSP_LED_YELLOW3,   // PA9
+    BSP_LED_YELLOW1, // PB6
+    BSP_LED_YELLOW2, // PC7
+    BSP_LED_YELLOW3, // PA9
 
     // Green LED
-    BSP_LED_GREEN,     // PA8
+    BSP_LED_GREEN, // PA8
 
     // User button
-    BSP_BUTTON1,       // PB10
+    BSP_BUTTON1, // PB10
 
     BSP_GPIO_MAX
-} tBsp_GpioId;
+} t_bsp_gpio_id;
 
 typedef struct
 {
-    GPIO_TypeDef* port;
+    GPIO_TypeDef *port;
     GPIO_InitTypeDef config;
     void (*clkEnableFunc)(void);
-}tGpio_Config;
+} t_bsp_gpio_config;
 
-extern const tGpio_Config bsp_gpio_list[BSP_GPIO_MAX];
+extern const t_bsp_gpio_config bsp_gpio_list[BSP_GPIO_MAX];
 
 #endif // BSP_GPIO_H

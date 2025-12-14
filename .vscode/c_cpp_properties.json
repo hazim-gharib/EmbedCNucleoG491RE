@@ -1,0 +1,29 @@
+{
+  "configurations": [
+    {
+      "name": "ARM",
+      "compilerPath": "/home/hazim/toolchains/arm-gnu-toolchain-14.3.rel1-x86_64-arm-none-eabi/bin/arm-none-eabi-gcc",
+      "cStandard": "c11",
+      "cppStandard": "c++17",
+      "intelliSenseMode": "gcc-arm",
+      "compileCommands": "${workspaceFolder}/build/compile_commands.json",
+      "includePath": [
+        "${workspaceFolder}/**",
+        "${workspaceFolder}/vendor/STM32CubeG4/Drivers/STM32G4xx_HAL_Driver/Inc",
+        "${workspaceFolder}/vendor/STM32CubeG4/Drivers/STM32G4xx_HAL_Driver/Inc/Legacy",
+        "${workspaceFolder}/vendor/STM32CubeG4/Drivers/CMSIS/Device/ST/STM32G4xx/Include",
+        "${workspaceFolder}/vendor/STM32CubeG4/Drivers/CMSIS/Include",
+        "${workspaceFolder}/board/g491re",
+        "${workspaceFolder}/bsp",
+        "${workspaceFolder}/app"
+      ],
+      "browse": {
+        "path": [
+          "${workspaceFolder}/**"
+        ],
+        "limitSymbolsToIncludedHeaders": true
+      }
+    }
+  ],
+  "version": 4
+}

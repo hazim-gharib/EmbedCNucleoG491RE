@@ -1,6 +1,7 @@
 #include "app.h"
-#include "bsp_gpio.h"
-#include "board/g491re/public_inc/gpio.h"
+#include "bsp/bsp_gpio.h"
+#include "led.h"
+#include "board/g491re/gpio.h"
 #include "stm32g4xx_hal.h"
 
 // Simple tick-based periodic scheduler: delay until the next absolute tick time.
@@ -37,12 +38,17 @@ void app_main(void)
     const uint32_t period_ms = 200;
     uint32_t next_wake = 0;
 
+    led_init();
+    led_set_blink(GPIO_LED_BLUE_1, true, 100);
+    led_set_blink(GPIO_LED_BLUE_2, true, 200);
+    led_set_blink(GPIO_LED_BLUE_3, true, 300);
+    led_set_blink(GPIO_LED_YELLOW_1, true, 400);
+    led_set_blink(GPIO_LED_YELLOW_2, true, 500);
+    led_set_blink(GPIO_LED_YELLOW_3, true, 600);
+    led_set_blink(GPIO_LED_GREEN_1, true, 700);
+    
     while (1)
     {
-        // Application work
-        mGpio_toggle(BSP_LED_BLUE1);
-
-        // Wait until the next periodic tick (keeps loop steady at `period_ms`)
-        delay_until_next(&next_wake, period_ms);
+        led_process();
     }
 }

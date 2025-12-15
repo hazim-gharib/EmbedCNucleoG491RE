@@ -2,27 +2,19 @@
 #define GPIO_H
 
 #include "stm32g4xx_hal.h"
+#include "board_layout.h"
 
-typedef enum
-{
-    // Blue LEDs
-    GPIO_LED_BLUE_1 = 0,
-    GPIO_LED_BLUE_2,
-    GPIO_LED_BLUE_3,
+#define GPIO_DECLARE_LED_ID(name, port, pin, mode, pull, speed) GPIO_LED_##name,
+#define GPIO_DECLARE_BTN_ID(name, port, pin, mode, pull, speed) GPIO_BTN_##name,
 
-    // Yellow LEDs
-    GPIO_LED_YELLOW_1,
-    GPIO_LED_YELLOW_2,
-    GPIO_LED_YELLOW_3,
-
-    // Green LED
-    GPIO_LED_GREEN_1,
-
-    // User button
-    GPIO_BUTTON_1,
-
+typedef enum {
+    BOARD_LED_LIST(GPIO_DECLARE_LED_ID)
+    BOARD_BUTTON_LIST(GPIO_DECLARE_BTN_ID)
     GPIO_MAX
 } gpioPinId;
+
+#undef GPIO_DECLARE_LED_ID
+#undef GPIO_DECLARE_BTN_ID
 
 typedef struct
 {
@@ -30,10 +22,12 @@ typedef struct
     GPIO_InitTypeDef config;
 } gpioPinConfig;
 
+extern const gpioPinConfig gpio_pins[GPIO_MAX];
 
 void gpio_init(void);
 void gpio_set(gpioPinId id);
 void gpio_reset(gpioPinId id);
 GPIO_PinState gpio_read(gpioPinId id);
 void gpio_toggle(gpioPinId id);
+
 #endif // GPIO_H

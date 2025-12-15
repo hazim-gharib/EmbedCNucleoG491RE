@@ -5,7 +5,12 @@
 #include <stdbool.h>
 #include "board/g491re/gpio.h"
 
-typedef gpioPinId ledId;
+#define LED_DECLARE_ENUM(name, port, pin, mode, pull, speed) LED_ID_##name,
+typedef enum {
+    BOARD_LED_LIST(LED_DECLARE_ENUM)
+    LED_ID_MAX
+} ledId;
+#undef LED_DECLARE_ENUM
 
 #ifdef __cplusplus
 extern "C" {

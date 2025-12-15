@@ -1,91 +1,38 @@
 #include "gpio.h"
-#include "board_layout.h"
 
-static const gpioPinConfig pin_configs[GPIO_MAX] = {
-    // Blue LEDs
-    [GPIO_LED_BLUE_1] = {
-        .port = GPIO_LED_BLUE_1_PORT,
-        .config = {
-            .Pin = GPIO_LED_BLUE_1_PIN,
-            .Mode = GPIO_LED_BLUE_1_MODE,
-            .Pull = GPIO_LED_BLUE_1_PULL,
-            .Speed = GPIO_LED_BLUE_1_SPEED
-        },
-    },
-    [GPIO_LED_BLUE_2] = {
-        .port = GPIO_LED_BLUE_2_PORT,
-        .config = {
-            .Pin = GPIO_LED_BLUE_2_PIN,
-            .Mode = GPIO_LED_BLUE_2_MODE,
-            .Pull = GPIO_LED_BLUE_2_PULL,
-            .Speed = GPIO_LED_BLUE_2_SPEED
-        },
-    },
-    [GPIO_LED_BLUE_3] = {
-        .port = GPIO_LED_BLUE_3_PORT,
-        .config = {
-            .Pin = GPIO_LED_BLUE_3_PIN,
-            .Mode = GPIO_LED_BLUE_3_MODE,
-            .Pull = GPIO_LED_BLUE_3_PULL,
-            .Speed = GPIO_LED_BLUE_3_SPEED
-        },
-    },
-    [GPIO_LED_YELLOW_1] = {
-        .port = GPIO_LED_YELLOW_1_PORT,
-        .config = {
-            .Pin = GPIO_LED_YELLOW_1_PIN,
-            .Mode = GPIO_LED_YELLOW_1_MODE,
-            .Pull = GPIO_LED_YELLOW_1_PULL,
-            .Speed = GPIO_LED_YELLOW_1_SPEED
-        },
-    },
-    [GPIO_LED_YELLOW_2] = {
-        .port = GPIO_LED_YELLOW_2_PORT,
-        .config = {
-            .Pin = GPIO_LED_YELLOW_2_PIN,
-            .Mode = GPIO_LED_YELLOW_2_MODE,
-            .Pull = GPIO_LED_YELLOW_2_PULL,
-            .Speed = GPIO_LED_YELLOW_2_SPEED
-        },
-    },
-    [GPIO_LED_YELLOW_3] = {
-        .port = GPIO_LED_YELLOW_3_PORT,
-        .config = {
-            .Pin = GPIO_LED_YELLOW_3_PIN,
-            .Mode = GPIO_LED_YELLOW_3_MODE,
-            .Pull = GPIO_LED_YELLOW_3_PULL,
-            .Speed = GPIO_LED_YELLOW_3_SPEED
-        },
-    },
-    [GPIO_LED_GREEN_1] = {
-        .port = GPIO_LED_GREEN_1_PORT,
-        .config = {
-            .Pin = GPIO_LED_GREEN_1_PIN,
-            .Mode = GPIO_LED_GREEN_1_MODE,
-            .Pull = GPIO_LED_GREEN_1_PULL,
-            .Speed = GPIO_LED_GREEN_1_SPEED
-        },
-    },
-    [GPIO_BUTTON_1] = {
-        .port = GPIO_BUTTON_1_PORT,
-        .config = {
-            .Pin = GPIO_BUTTON_1_PIN,
-            .Mode = GPIO_BUTTON_1_MODE,
-            .Pull = GPIO_BUTTON_1_PULL,
-            .Speed = GPIO_BUTTON_1_SPEED
-        },
-    },
+static void enable_gpio_clock(GPIO_TypeDef *port)
+{
+    if (port == GPIOA && !__HAL_RCC_GPIOA_IS_CLK_ENABLED()) __HAL_RCC_GPIOA_CLK_ENABLE();
+    else if (port == GPIOB && !__HAL_RCC_GPIOB_IS_CLK_ENABLED()) __HAL_RCC_GPIOB_CLK_ENABLE();
+    else if (port == GPIOC && !__HAL_RCC_GPIOC_IS_CLK_ENABLED()) __HAL_RCC_GPIOC_CLK_ENABLE();
+    else if (port == GPIOD && !__HAL_RCC_GPIOD_IS_CLK_ENABLED()) __HAL_RCC_GPIOD_CLK_ENABLE();
+    else if (port == GPIOE && !__HAL_RCC_GPIOE_IS_CLK_ENABLED()) __HAL_RCC_GPIOE_CLK_ENABLE();
+    else if (port == GPIOF && !__HAL_RCC_GPIOF_IS_CLK_ENABLED()) __HAL_RCC_GPIOF_CLK_ENABLE();
+    else if (port == GPIOG && !__HAL_RCC_GPIOG_IS_CLK_ENABLED()) __HAL_RCC_GPIOG_CLK_ENABLE();
+}
+
+#define GPIO_BUILD_LED_ENTRY(name, port, pin, mode, pull, speed) \
+    { port, { pin, mode, pull, speed } },
+
+#define GPIO_BUILD_BTN_ENTRY(name, port, pin, mode, pull, speed) \
+    { port, { pin, mode, pull, speed } },
+
+const gpioPinConfig gpio_pins[GPIO_MAX] = 
+{
+    BOARD_LED_LIST(GPIO_BUILD_LED_ENTRY)
+    BOARD_BUTTON_LIST(GPIO_BUILD_BTN_ENTRY)
 };
+
+#undef GPIO_BUILD_LED_ENTRY
+#undef GPIO_BUILD_BTN_ENTRY
 
 void gpio_init(void)
 {
-    __HAL_RCC_GPIOA_CLK_ENABLE();
-    __HAL_RCC_GPIOB_CLK_ENABLE();
-    __HAL_RCC_GPIOC_CLK_ENABLE();
-
     for (uint32_t pin = 0; pin < GPIO_MAX; pin++)
     {
-        HAL_GPIO_Init(pin_configs[pin].port, &pin_configs[pin].config);
+        enable_gpio_clock(gpio_pins[pin].port);
+        HAL_GPIO_Init(gpio_pins[pin].port, (GPIO_InitTypeDef *)&gpio_pins[pin].config);
+        gpio_reset((gpioPinId)pin);
     }
 }
 
@@ -93,7 +40,7 @@ void gpio_set(gpioPinId id)
 {
     if (id < GPIO_MAX)
     {
-        HAL_GPIO_WritePin(pin_configs[id].port, (uint16_t)(pin_configs[id].config.Pin & GPIO_PIN_MASK), GPIO_PIN_SET);
+        HAL_GPIO_WritePin(gpio_pins[id].port, (uint16_t)gpio_pins[id].config.Pin, GPIO_PIN_SET);
     }
 }
 
@@ -101,7 +48,7 @@ void gpio_reset(gpioPinId id)
 {
     if (id < GPIO_MAX)
     {
-        HAL_GPIO_WritePin(pin_configs[id].port, (uint16_t)(pin_configs[id].config.Pin & GPIO_PIN_MASK), GPIO_PIN_RESET);
+        HAL_GPIO_WritePin(gpio_pins[id].port, (uint16_t)gpio_pins[id].config.Pin, GPIO_PIN_RESET);
     }
 }
 
@@ -109,7 +56,7 @@ GPIO_PinState gpio_read(gpioPinId id)
 {
     if (id < GPIO_MAX)
     {
-        return HAL_GPIO_ReadPin(pin_configs[id].port, (uint16_t)(pin_configs[id].config.Pin & GPIO_PIN_MASK));
+        return HAL_GPIO_ReadPin(gpio_pins[id].port, (uint16_t)gpio_pins[id].config.Pin);
     }
     return GPIO_PIN_RESET;
 }
@@ -118,6 +65,6 @@ void gpio_toggle(gpioPinId id)
 {
     if (id < GPIO_MAX)
     {
-        HAL_GPIO_TogglePin(pin_configs[id].port, (uint16_t)(pin_configs[id].config.Pin & GPIO_PIN_MASK));
+        HAL_GPIO_TogglePin(gpio_pins[id].port, (uint16_t)gpio_pins[id].config.Pin);
     }
 }
